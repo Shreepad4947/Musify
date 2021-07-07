@@ -1,15 +1,46 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
+import AlbumCategory from '../components/AlbumCategory';
+import albumCategories from '../data/albumCategories';
+import { listAlbumCategorys } from '../src/graphql/queries';
+import {useEffect, useState} from "react";
+import { API, graphqlOperation } from 'aws-amplify';
+import {  FlatList, View  } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
 
-export default function TabOneScreen() {
+
+
+
+export default function HomeScreen() {
+
+  // const [categories, setCategories] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchAlbumCategories = async () => {
+  //     try {
+  //       const data = await API.graphql(graphqlOperation(listAlbumCategorys));
+  //       setCategories(data.data.listAlbumCategorys.items);
+  //     } catch (e) {
+  //       console.log(data);
+  //     }
+  //   }
+
+  //   fetchAlbumCategories();
+  // }, []);
+
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+       <FlatList
+         data={albumCategories}
+         renderItem={({ item }) => (
+           <AlbumCategory
+             title={item.title}
+             albums={item.albums}
+           />
+         )}
+         keyExtractor={(item) => item.id}
+       />
     </View>
   );
 }

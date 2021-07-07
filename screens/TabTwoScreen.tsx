@@ -1,32 +1,107 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
-
+import * as React  from 'react';
+import { StyleSheet,Alert } from 'react-native';
+import { useEffect,useState ,useRef} from 'react';
+import * as MediaLibrary from 'expo-media-library';
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { FlatList, View, Text, SafeAreaView,  Dimensions, Animated, Easing  } from 'react-native';
+import { createContext } from 'react';
+import { Media } from '../types';
+import SongListItem from '../components/SongListItem';
+// import songslibrary from '../components/songslibrary';
+import AlbumComponent from '../components/Album';
+import songItems from '../components/songItems';
+import SongComponent from '../components/songItems';
 
-export default function TabTwoScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
-    </View>
-  );
+// export interface Data {
+//   media: string;
+ 
+// }
+// export type mediaprops={
+//   media:Media,
+// }
+
+
+
+
+// var data : string[Media];
+// const [categories,setcategories]= useState( []);
+
+export default function  TabTwoScreen(props:mediaprops) {
+const getPermission= async ()=>{
+   const permission =await MediaLibrary.getPermissionsAsync()
+   if (permission.granted){
+     getAudioFiles();
+   }
+   if(!permission.granted && permission.canAskAgain){
+     const {status,canAskAgain} = await MediaLibrary.requestPermissionsAsync()
+     if (status == 'denied' && canAskAgain){
+       permissionAlert();
+  } 
+  if(status=='granted'){
+getAudioFiles();
+  }
+  if (status == 'denied' && !canAskAgain){
+
+  }
+  }
+} 
+  
+  const permissionAlert=()=>{
+    Alert.alert("Permission Required", "This App Neeeds to Read Audio From Device",
+    [{text:"Allow",
+    onPress:()=> getPermission()
+  },
+  
+  {
+  text:"Deny",
+  onPress:()=> permissionAlert()
+}])
 }
+
+const getAudioFiles= async()=>{
+ const media=await MediaLibrary.getAssetsAsync({
+    mediaType:'audio',
+ 
+  }
+  
+  );
+
+
+ 
+  
+
+  
+ 
+
+useEffect(() =>{
+  getPermission();
+},[]);
+
+
+
+
+  return(
+  <View style={styles.container}>
+   
+    
+
+    <Text>gsefkighireuh</Text>
+    
+  </View>
+    
+  )};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
+   
+    color:'white'
+    
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+})};
